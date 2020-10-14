@@ -1,15 +1,29 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import Layout from '../components/Layout';
+import { getTopicList } from '../apis';
+import { Topic } from '../interfaces';
+import { TopicList } from '../components/TopicList';
 
-const IndexPage = () => (
-  <Layout title="Home | Next.js + TypeScript Example">
-    <h1>Hello Next.js 👋</h1>
-    <p>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
-    </p>
-  </Layout>
-)
+interface Props {
+  topics: Topic[];
+}
 
-export default IndexPage
+const IndexPage = ({ topics }: Props) => {
+  return (
+    <Layout title='Home | Serverless V2EX'>
+      <TopicList topics={topics} />
+    </Layout>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const { query = {} } = context;
+  const tab = query.tab ? (query.tab as string) : 'latest';
+
+  const topics: Topic[] = await getTopicList(tab);
+  return { props: { topics } };
+};
+
+export default IndexPage;

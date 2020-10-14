@@ -1,6 +1,6 @@
 {
-  "name": "with-typescript",
-  "version": "1.0.0",
+  "name": "serverless-v2ex",
+  "version": "0.0.1",
   "scripts": {
     "dev": "next",
     "build": "next build",
@@ -8,6 +8,9 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.2.2",
+    "antd-mobile": "^2.3.4",
+    "axios": "^0.20.0",
     "next": "latest",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
@@ -16,7 +19,29 @@
     "@types/node": "^12.12.21",
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
+    "babel-plugin-import": "^1.13.1",
+    "svg-sprite-loader": "^5.0.0",
     "typescript": "4.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "description": "This is a really simple project that shows the usage of Next.js with TypeScript.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/serverless-plus/serverless-v2ex.git"
+  },
+  "keywords": [
+    "serverless-v2ex",
+    "serverless",
+    "v2ex",
+    "next.js",
+    "typescript",
+    "serverless-framework",
+    "serverless-components",
+    "tencent-cloud"
+  ],
+  "author": "yugasun",
+  "bugs": {
+    "url": "https://github.com/serverless-plus/serverless-v2ex/issues"
+  },
+  "homepage": "https://github.com/serverless-plus/serverless-v2ex#readme"
 }

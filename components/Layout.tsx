@@ -1,41 +1,27 @@
-import React, { ReactNode } from 'react'
-import Link from 'next/link'
-import Head from 'next/head'
+import React, { ReactNode } from 'react';
+import { LocaleProvider } from 'antd-mobile';
+import enUS from 'antd-mobile/lib/locale-provider/en_US';
+import { MenuBar } from './MenuBar';
+import { BackButton } from './BackButton';
 
 type Props = {
-  children?: ReactNode
-  title?: string
-}
+  children?: ReactNode;
+  title?: string;
+  tab?: string;
+  language?: string;
+};
 
-const Layout = ({ children, title = 'This is the default title' }: Props) => (
-  <div>
-    <Head>
-      <title>{title}</title>
-      <meta charSet="utf-8" />
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    </Head>
-    <header>
-      <nav>
-        <Link href="/">
-          <a>Home</a>
-        </Link>{' '}
-        |{' '}
-        <Link href="/about">
-          <a>About</a>
-        </Link>{' '}
-        |{' '}
-        <Link href="/users">
-          <a>Users List</a>
-        </Link>{' '}
-        | <a href="/api/users">Users API</a>
-      </nav>
-    </header>
-    {children}
-    <footer>
-      <hr />
-      <span>I'm here to stay (Footer)</span>
-    </footer>
-  </div>
-)
+const Layout = ({ language, children }: Props) => {
+  const locale: any =
+    language && language.substr(0, 2) === 'en' ? enUS : undefined;
 
-export default Layout
+  return (
+    <LocaleProvider locale={locale}>
+      <MenuBar>
+        {children} <BackButton />
+      </MenuBar>
+    </LocaleProvider>
+  );
+};
+
+export default Layout;
