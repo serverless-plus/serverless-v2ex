@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Layout from '../components/Layout';
 import { get } from '../utils/request';
+import Layout from '../components/Layout';
 import { Topic } from '../interfaces';
 import { TopicList } from '../components/TopicList';
 import { Loading } from '../components/Loading';

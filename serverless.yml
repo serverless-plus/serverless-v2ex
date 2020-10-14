@@ -1,0 +1,54 @@
+org: serverless-v2ex
+app: serverless-v2ex
+stage: dev
+component: nextjs
+name: serverless-v2ex
+
+inputs:
+  src:
+    dist: ./
+    hook: npm run build:sls
+    exclude:
+      - .env
+      - '.git/**'
+      - 'docs/**'
+      - '.next/cache/**'
+      - 'node_modules/**'
+  region: ${env:REGION}
+  runtime: Nodejs12.16
+  functionName: ${name}
+  layers:
+    - name: ${output:${stage}:${app}:${name}-layer.name}
+      version: ${output:${stage}:${app}:${name}-layer.version}
+  functionConf:
+    timeout: 10
+    environment:
+      variables:
+        NODE_ENV: production
+        SERVERLESS: true
+  apigatewayConf:
+    protocols:
+      - http
+      - https
+    environment: release
+    enableCORS: true
+    customDomains:
+      - domain: ${env:APIGW_CUSTOM_DOMAIN}
+        certificateId: ${env:APIGW_CUSTOM_DOMAIN_CERTID}
+        isDefaultMapping: false
+        pathMappingSet:
+          - path: /
+            environment: release
+        protocols:
+          - http
+          - https
+  staticConf:
+    cosConf:
+      bucket: ${env:BUCKET}
+    cdnConf:
+      # First deployment, plz set onlyRefresh to false !!!!
+      # after you deploy CDN once, just set onlyRefresh to true for refresh CDN cache
+      onlyRefresh: true
+      domain: ${env:CDN_DOMAIN}
+      https:
+        certId: ${env:CDN_DOMAIN_CERTID}

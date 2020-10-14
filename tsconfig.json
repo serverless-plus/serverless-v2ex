@@ -22,6 +22,16 @@
       "@assets": ["assets"],
     }
   },
-  "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.tsx", "next.config.js"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".next",
+    "out",
+    "next.config.js",
+    ".babelrc",
+    "bundles",
+    "coverage",
+    "test/*"
+  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

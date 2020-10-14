@@ -1,41 +1,87 @@
-# TypeScript Next.js example
+# Serverless V2EX
 
-This is a really simple project that shows the usage of Next.js with TypeScript.
+[在线预览](https://v2ex.yuga.chat)
 
-## Deploy your own
+使用 Next.js + TypeScript 开发，并且基于 Serverless 部署的 v2ex 客户端
 
-Deploy the example using [Vercel](https://vercel.com):
+## 流程图
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/vercel/next.js/tree/canary/examples/with-typescript)
+![Deploy Flow](./docs/ssr-deploy-flow.png)
 
-## How to use it?
+## 功能
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
+- [x] Typescript
+- [x] Next.js
+- [x] 自定义 Express Server
+- [x] LRU Render Cache
+- [x] 基于 Serverless Next.js 组件部署
+- [x] **静态资源分离，自动部署到 COS**
+- [x] **自动为静态 COS 配置 CDN**
+- [x] **node_modules 基于层部署，大大提高部署效率**
+
+## 本地开发
 
 ```bash
-npx create-next-app --example with-typescript with-typescript-app
-# or
-yarn create next-app --example with-typescript with-typescript-app
+$ npm install
+
+$ npm run dev
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/import?filter=next.js&utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+## 构建
 
-## Notes
-
-This example shows how to integrate the TypeScript type system into Next.js. Since TypeScript is supported out of the box with Next.js, all we have to do is to install TypeScript.
-
-```
-npm install --save-dev typescript
+```bash
+$ npm run build
 ```
 
-To enable TypeScript's features, we install the type declarations for React and Node.
+## 配置
 
+在部署到 Serverless 前，将 `.env.example` 重命名为 `.env`，并请完成如下配置：
+
+```dotenv
+# 腾讯云授权密钥
+TENCENT_APP_ID=xxx
+TENCENT_SECRET_ID=xxx
+TENCENT_SECRET_KEY=xxx
+
+# 部署地区
+REGION=ap-guangzhou
+
+# 静态资源上传 COS 桶名称
+BUCKET=serverless-v2ex
+
+# API 网关自定义域名 和 证书 ID
+APIGW_CUSTOM_DOMAIN=v2ex.yuga.chat
+APIGW_CUSTOM_DOMAIN_CERTID=xxx
+
+# CDN 域名，证书 ID
+CDN_DOMAIN=static.v2ex.yuga.chat
+CDN_DOMAIN_CERTID=xxx
 ```
-npm install --save-dev @types/react @types/react-dom @types/node
+
+> 注意：如果不需要使用 CDN，直接使用 COS 自动生成的域名，也是可以的，只需要删除
+> `serverless.yml` 中的 `cdnConf` 即可。
+
+## 部署
+
+此项目会先将 `node_modules` 部署到
+[层](https://cloud.tencent.com/document/product/583/40159)，然后在部署项目代码，
+这样下次部署项目时，如果 `node_modules` 没有修改，我们就不需要部署庞大的
+`node_modules` 文件夹了。
+
+1. 部署层:
+
+```bash
+$ npm run deploy:layer
 ```
 
-When we run `next dev` the next time, Next.js will start looking for any `.ts` or `.tsx` files in our project and builds it. It even automatically creates a `tsconfig.json` file for our project with the recommended settings.
+> 注意：如果项目 `node_modules` 没有变更，就不需要执行此命令。
 
-Next.js has built-in TypeScript declarations, so we'll get autocompletion for Next.js' modules straight away.
+2. 部署业务代码：
 
-A `type-check` script is also added to `package.json`, which runs TypeScript's `tsc` CLI in `noEmit` mode to run type-checking separately. You can then include this, for example, in your `test` scripts.
+```bash
+$ npm run deploy
+```
+
+## License
+
+MIT

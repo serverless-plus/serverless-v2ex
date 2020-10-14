@@ -22,62 +22,60 @@ const nodeList = [
   {
     title: '首页',
     tab: 'index',
-    node: <Link href='/'>首页</Link>,
+    href: '/',
     icon: <HomeOutlined />,
   },
   {
     title: '最热',
     tab: 'hot',
-    node: <Link href='/topics?tab=hot'>最热</Link>,
+    href: 'topics?tab=hot',
     icon: <FireOutlined />,
   },
   {
     title: '最新',
     tab: 'latest',
-    node: <Link href='/topics?tab=latest'>最新</Link>,
+    href: 'topics?tab=latest',
     icon: <FieldTimeOutlined />,
   },
   {
     title: 'Node.js',
     tab: 'nodejs',
-    node: <Link href='/topics?tab=nodejs'>Node.js</Link>,
+    href: 'topics?tab=nodejs',
     icon: <NodejsIcon />,
   },
   {
     title: 'Python',
     tab: 'python',
-    node: <Link href='/topics?tab=python'>Python</Link>,
+    href: 'topics?tab=python',
     icon: <FieldTimeOutlined />,
   },
   {
     title: '程序员',
     tab: 'programmer',
-    node: <Link href='/topics?tab=programmer'>程序员</Link>,
+    href: 'topics?tab=programmer',
     icon: <UserOutlined />,
   },
   {
     title: 'Linux',
     tab: 'linux',
-    node: <Link href='/topics?tab=linux'>Linux</Link>,
+    href: 'topics?tab=linux',
     icon: <CodeOutlined />,
   },
   {
     title: '问与答',
     tab: 'qna',
-    node: <Link href='/topics?tab=qna'>问与答</Link>,
+    href: 'topics?tab=qna',
     icon: <QuestionCircleOutlined />,
   },
   {
     title: '酷工作',
     tab: 'jobs',
-    node: <Link href='/topics?tab=jobs'>酷工作</Link>,
+    href: 'topics?tab=jobs',
     icon: <DesktopOutlined />,
   },
 ];
 
-const MenuBar = ({ pathname, children }: MenuBarProps) => {
-  console.log('pathname', pathname);
-
+const MenuBar = ({ children }: MenuBarProps) => {
   const [open, setOpen] = useState(false);
   const [drawHeight, setDrawHeight] = useState(1000);
 
@@ -93,7 +91,7 @@ const MenuBar = ({ pathname, children }: MenuBarProps) => {
             onClick={() => setOpen(!open)}
             key={item.tab}
             thumb={item.icon}>
-            {item.node}
+            <Link href={item.href}>{item.title}</Link>
           </List.Item>
         );
       })}

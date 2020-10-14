@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 const BackButton = () => {
   const router = useRouter();
   const [show, setShow] = useState(false);
-  console.log(router);
   useEffect(() => {
     setShow(history.length > 1);
   });

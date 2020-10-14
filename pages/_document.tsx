@@ -17,6 +17,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <link rel='icon' href={`${process.env.STATIC_URL}/favicon.png`} />
           <link
             rel='stylesheet'
             type='text/css'
