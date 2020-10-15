@@ -19,6 +19,10 @@
 - [x] **自动为静态 COS 配置 CDN**
 - [x] **node_modules 基于层部署，大大提高部署效率**
 
+## 展示
+
+<img src="./docs/demo.png" width="300"/>
+
 ## 本地开发
 
 ```bash
