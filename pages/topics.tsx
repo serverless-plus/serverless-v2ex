@@ -1,35 +1,30 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { get } from '../utils/request';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import Layout from '../components/Layout';
 import { Topic } from '../interfaces';
+import { getTopicList } from '../apis';
 import { TopicList } from '../components/TopicList';
-import { Loading } from '../components/Loading';
 
-const TopicsPage = () => {
-  const router = useRouter();
-  const tab = (router.query.tab as string) || 'latest';
+interface Props {
+  tab: string;
+  topics: Topic[];
+}
 
-  const [topicList, setTopicList] = useState([] as Topic[]);
-  const [loading, setLoading] = useState(true);
-
-  async function getTopics(tab: string) {
-    const topics: Topic[] = await get({
-      url: `/api/topics?tab=${tab}`,
-    });
-    setTopicList(topics);
-  }
-
-  useEffect(() => {
-    getTopics(tab);
-    setLoading(false);
-  }, [tab]);
-
+const TopicsPage = ({ tab, topics }: Props) => {
   return (
     <Layout title={`${tab} | Serverless V2EX`}>
-      {!loading ? <TopicList topics={topicList} /> : <Loading />}
+      <TopicList topics={topics} />
     </Layout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const { query = {} } = context;
+  const tab = query.tab ? (query.tab as string) : 'latest';
+
+  const topics: Topic[] = await getTopicList(tab);
+  return { props: { topics, tab } };
 };
 
 export default TopicsPage;

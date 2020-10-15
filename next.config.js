@@ -8,7 +8,7 @@ function moduleDir(m) {
 const isProd = process.env.NODE_ENV === 'production';
 
 // if not use CDN, change to your cos access domain
-const STATIC_URL = `https://${process.env.CDN_DOMAIN}`;
+const STATIC_URL = 'https://static.v2ex.yuga.chat';
 
 module.exports = {
   env: {

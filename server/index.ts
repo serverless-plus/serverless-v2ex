@@ -1,8 +1,8 @@
 import { join } from 'path';
 import Next from 'next';
 import Express, { Request, Response } from 'express';
-import Cache from './cache';
 import { ParsedUrlQuery } from 'querystring';
+import cacheableResponse from 'cacheable-response';
 
 const dev = process.env.NODE_ENV !== 'production';
 const port = parseInt(process.env.PORT as string, 10) || 8000;
@@ -10,39 +10,30 @@ const port = parseInt(process.env.PORT as string, 10) || 8000;
 const app = Next({ dev });
 const handle = app.getRequestHandler();
 
-function getCacheKey(req: Request) {
-  return `${req.url}`;
-}
-async function cacheRender(req: Request, res: Response) {
-  const key = getCacheKey(req);
-  const reqPath = req.path;
-  if (Cache.has(key)) {
-    res.setHeader('X-Cache', 'HIT');
+type CacheOptions = {
+  req: Request;
+  res: Response;
+};
 
-    return res.send(Cache.get(key));
-  }
+const ssrCache = cacheableResponse({
+  ttl: 1000 * 60 * 60, // 1hour
+  get: async ({ req, res }: CacheOptions) => {
+    const data = await app.render(req, res, req.path, {
+      ...(req.query as ParsedUrlQuery),
+      ...req.params,
+    });
 
-  try {
-    const html = await app.renderToHTML(
-      req,
-      res,
-      reqPath,
-      req.query as ParsedUrlQuery,
-    );
-
-    if (res.statusCode !== 200) {
-      res.send(html);
-    } else {
-      res.setHeader('X-Cache', 'MISS');
-
-      Cache.set(key, html);
-      res.send(html);
+    // Add here custom logic for when you do not want to cache the page, for
+    // example when the page returns a 404 status code:
+    if (res.statusCode === 404) {
+      res.end(data);
+      return null;
     }
-  } catch (err) {
-    res.statusCode = 500;
-    app.renderError(err, req, res, reqPath, req.query as ParsedUrlQuery);
-  }
-}
+
+    return null;
+  },
+  send: ({ data, res }) => res.send(data),
+});
 
 async function startServer() {
   await app.prepare();
@@ -51,11 +42,15 @@ async function startServer() {
   server.use(Express.static(join(__dirname, '../public/static')));
 
   server.get('/', async (req, res) => {
-    return cacheRender(req, res);
+    return ssrCache({ req, res });
   });
 
   server.get('/about', async (req, res) => {
-    return cacheRender(req, res);
+    return ssrCache({ req, res });
+  });
+
+  server.get('/topic', async (req, res) => {
+    return ssrCache({ req, res });
   });
 
   server.get('*', (req, res) => {

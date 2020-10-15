@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import Layout from '../components/Layout';
 import { formatDate } from '../utils';
-import { get } from '../utils/request';
+import { getTopic } from '../apis';
 import { Loading } from '../components/Loading';
 import { Topic } from '../interfaces';
 // import BackToTop from './BackTop';
@@ -12,20 +11,7 @@ type TopicProps = {
   topicId: string;
 };
 
-const TopicPage = ({ topic: initTopic, topicId }: TopicProps) => {
-  const [topic, setTopic] = useState(initTopic);
-
-  async function getTopic() {
-    const topic: Topic = await get({
-      url: `/api/topics/detail?id=${topicId}`,
-    });
-    setTopic(topic);
-  }
-
-  if (!topic) {
-    getTopic();
-  }
-
+const TopicPage = ({ topic }: TopicProps) => {
   const { replyList = [] } = topic || {};
 
   //获取回复列表
@@ -98,11 +84,11 @@ export const getServerSideProps: GetServerSideProps = async (
   const { query = {} } = context;
 
   if (query && query.id) {
-    // const topic: Topic = await getTopic(query.id as string);
+    const topic: Topic = await getTopic(query.id as string);
 
-    return { props: { topic: null, topicId: query.id } };
+    return { props: { topic: topic, topicId: query.id } };
   }
-  return { props: { topic: null } };
+  return { props: { topic: {} } };
 };
 
 export default TopicPage;

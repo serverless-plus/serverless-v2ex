@@ -138,7 +138,7 @@ body {
 }
 
 .reply-content span,
-a {
+.reply-content a {
   color: #caa;
 }
 
@@ -225,4 +225,20 @@ a {
   bottom: 10px;
   z-index: 1000;
   color: #108ee9;
+}
+
+.nav-item {
+  color: #000;
+}
+.nav-item a {
+  color: #000;
+}
+
+.nav-item.active {
+  background-color: #5fa9de;
+  color: #fff;
+}
+
+.nav-item.active a {
+  color: #fff;
 }

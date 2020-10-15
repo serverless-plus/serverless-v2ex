@@ -1,5 +1,6 @@
 import { ReactNode, useState, useEffect, Fragment } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Drawer, List, NavBar } from 'antd-mobile';
 import {
   MenuOutlined,
@@ -75,9 +76,17 @@ const nodeList = [
   },
 ];
 
+function initTitle(tab = 'index') {
+  const [current] = nodeList.filter((item) => item.tab === tab);
+  return current.title;
+}
+
 const MenuBar = ({ children }: MenuBarProps) => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [drawHeight, setDrawHeight] = useState(1000);
+  const [tab] = useState(router.query.tab || 'index');
+  const [title, setTitle] = useState(initTitle(tab as string));
 
   useEffect(() => {
     setDrawHeight(document.documentElement.clientHeight);
@@ -88,9 +97,13 @@ const MenuBar = ({ children }: MenuBarProps) => {
       {nodeList.map((item) => {
         return (
           <List.Item
-            onClick={() => setOpen(!open)}
+            onClick={() => {
+              setOpen(!open);
+              setTitle(item.title);
+            }}
             key={item.tab}
-            thumb={item.icon}>
+            thumb={item.icon}
+            className={tab === item.tab ? `nav-item active` : 'nav-item'}>
             <Link href={item.href}>{item.title}</Link>
           </List.Item>
         );
@@ -110,7 +123,7 @@ const MenuBar = ({ children }: MenuBarProps) => {
             <QuestionCircleOutlined />
           </Link>,
         ]}>
-        Serverless V2EX
+        {title && `${title} - `}Serverless V2EX
       </NavBar>
       <Drawer
         className='my-drawer'

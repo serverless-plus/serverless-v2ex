@@ -32,6 +32,8 @@ inputs:
       - https
     environment: release
     enableCORS: true
+    function:
+      functionQualifier: $DEFAULT
     customDomains:
       - domain: ${env:APIGW_CUSTOM_DOMAIN}
         certificateId: ${env:APIGW_CUSTOM_DOMAIN_CERTID}

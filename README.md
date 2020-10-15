@@ -13,7 +13,7 @@
 - [x] Typescript
 - [x] Next.js
 - [x] 自定义 Express Server
-- [x] LRU Render Cache
+- [x] SSR Cache [cacheable-response](https://github.com/Kikobeats/cacheable-response)
 - [x] 基于 Serverless Next.js 组件部署
 - [x] **静态资源分离，自动部署到 COS**
 - [x] **自动为静态 COS 配置 CDN**
